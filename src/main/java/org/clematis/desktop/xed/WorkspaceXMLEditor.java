@@ -18,4 +18,42 @@ package org.clematis.desktop.xed;
    anton.troshin@gmail.com
   ----------------------------------------------------------------------------
  */
-public record TextSegment(int startOffset, int length, XmlNode textNode) {}
+import java.io.IOException;
+
+import javax.swing.SwingUtilities;
+
+import jworkspace.ui.api.views.DefaultCompoundView;
+
+public class WorkspaceXMLEditor extends DefaultCompoundView {
+
+
+    @SuppressWarnings("checkstyle:MagicNumber")
+    static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            javax.swing.JFrame frame = new javax.swing.JFrame("XML Editor");
+            frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 600);
+
+            StyledJavaXmlEditor editor = new StyledJavaXmlEditor();
+            frame.add(editor);
+
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
+    }
+
+    @Override
+    public void load() throws IOException {
+
+    }
+
+    @Override
+    public void save() throws IOException {
+
+    }
+
+    @Override
+    public void reset() {
+
+    }
+}
