@@ -44,7 +44,7 @@ jobs:
           else
             TAG="${{ github.event.inputs.version }}"
           fi
-          VERSION=$(echo "${TAG}" | xed 's/^v//')
+          VERSION=$(echo "${TAG}" | sed 's/^v//')
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "tag=${TAG}" >> $GITHUB_OUTPUT
 
