@@ -54,6 +54,7 @@ import javax.swing.tree.TreePath;
 import com.hyperrealm.kiwi.ui.KPanel;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A specialized editor component that accommodates the editing and visualization
@@ -74,6 +75,7 @@ public class StyledJavaXmlEditor extends KPanel {
     private final Map<XmlNode, DefaultMutableTreeNode> nodeToUiMap = new HashMap<>();
     private int nextTargetCaretPos = 0;
 
+    @Setter
     @Getter
     private File workingDirectory;
 
@@ -414,7 +416,4 @@ public class StyledJavaXmlEditor extends KPanel {
         return engine;
     }
 
-    public void setWorkingDirectory(File workingDirectory) {
-        this.workingDirectory = workingDirectory;
-    }
 }

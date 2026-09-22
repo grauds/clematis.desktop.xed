@@ -97,7 +97,7 @@ public class CustomTagPainter implements Highlighter.HighlightPainter {
             int fontHeight = (int) rStart.getHeight();
 
             // =================================================================
-            // CASE A: SINGLE LINE (The tag starts and ends on the same line row)
+            // SINGLE LINE (The tag starts and ends on the same line row)
             // =================================================================
             if (Math.abs(rStart.getY() - rEnd.getY()) < 4.0) {
                 int x = (int) rStart.getX();
@@ -118,7 +118,7 @@ public class CustomTagPainter implements Highlighter.HighlightPainter {
                 g2d.drawRoundRect(x, y + 1, width - 1, fontHeight - 3, 4, 4);
             } else {
                 // =================================================================
-                // CASE B: MULTI-LINE (The tag wraps across lines and ends mid-line)
+                // MULTI-LINE (The tag wraps across lines and ends mid-line)
                 // =================================================================
                 int yStart = (int) rStart.getY();
                 int yEnd = (int) rEnd.getY();

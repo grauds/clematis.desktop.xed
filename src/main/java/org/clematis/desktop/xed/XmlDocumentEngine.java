@@ -39,7 +39,7 @@ public class XmlDocumentEngine {
     }
 
     // =========================================================================
-    // SECTION 1: CORE DATA MUTATIONS
+    // CORE DATA MUTATIONS
     // =========================================================================
 
     public synchronized void insertText(int globalOffset, String newText) {
@@ -163,7 +163,7 @@ public class XmlDocumentEngine {
     }
 
     // =========================================================================
-    // SECTION 2: TOP-DOWN CANONICAL PARSE BUILDER
+    // TOP-DOWN CANONICAL PARSE BUILDER
     // =========================================================================
 
     synchronized void rebuildXmlTreeFromSpans() {

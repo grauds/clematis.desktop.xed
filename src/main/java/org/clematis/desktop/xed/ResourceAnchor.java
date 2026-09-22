@@ -32,9 +32,7 @@ import java.util.logging.Level;
 
 import lombok.extern.java.Log;
 
-/**
- * @author Anton Troshin
- */
+
 @Log
 public class ResourceAnchor {
 
