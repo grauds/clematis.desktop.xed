@@ -6,6 +6,10 @@ A simple visual XML editor for producing rich text with bold, italic, and underl
 
 <img src="./docs/screenshot.png" alt="workspace_component_life_cycle.png" width="700"/>
 
+## Clematis Java Workspace
+
+Please visit this [repository](https://github.com/grauds/clematis.desktop) to download a copy of Clematis Java Workspace to work with this plugin.
+
 ## Key Features
 
 - **XML Document Tree Structure**: Represents XML documents as a hierarchical tree of nodes with support for tags, text
