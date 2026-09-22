@@ -30,7 +30,7 @@ public class XmlDocumentEngine {
     private final List<TextSegment> segments = new ArrayList<>();
 
     // The single source of truth for the entire editor instance
-    private String flatText = "Type text here freely.";
+    private String flatText = "Type text here";
     private final List<StyleInterval> activeStyles = new ArrayList<>();
 
     public XmlDocumentEngine(XmlNode root) {

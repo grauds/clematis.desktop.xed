@@ -1,0 +1,76 @@
+name: Package and Publish XML Editor (JDK 25)
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: false
+        default: 'latest'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build and Publish Jar
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant Execute Permission for Gradle Wrapper
+        run: chmod +x ./gradlew
+
+      - name: Extract Version Name
+        id: get_version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG="${{ github.event.release.tag_name }}"
+          else
+            TAG="${{ github.event.inputs.version }}"
+          fi
+          VERSION=$(echo "${TAG}" | xed 's/^v//')
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+
+      - name: Compile Library Jar
+        run: ./gradlew :jar -Pversion=${{ steps.get_version.outputs.version }}
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rename and Stage Jar File
+        shell: bash
+        run: |
+          # Finds the main library jar, ignoring documentation or source jars if they exist
+          JAR_PATH=$(find build/libs -name "*.jar" ! -name "*-sources.jar" ! -name "*-javadoc.jar" | head -n 1)
+          if [ -f "$JAR_PATH" ]; then
+            mkdir -p staging
+            cp "$JAR_PATH" "staging/xed_${{ steps.get_version.outputs.version }}.jar"
+          else
+            echo "Error: Target JAR file not found"
+            exit 1
+          fi
+
+      - name: Upload Jar to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.tag }}
+          files: staging/xed_*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

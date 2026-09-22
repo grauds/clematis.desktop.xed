@@ -18,42 +18,121 @@ package org.clematis.desktop.xed;
    anton.troshin@gmail.com
   ----------------------------------------------------------------------------
  */
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.SwingUtilities;
+import javax.swing.ImageIcon;
 
+import com.hyperrealm.kiwi.io.ConfigFile;
+import com.hyperrealm.kiwi.util.ResourceLoader;
+import com.hyperrealm.kiwi.util.ResourceManager;
+
+import jworkspace.config.ServiceLocator;
+import jworkspace.runtime.plugin.WorkspacePluginContext;
+import jworkspace.ui.api.IView;
+import jworkspace.ui.api.cpanel.CButton;
 import jworkspace.ui.api.views.DefaultCompoundView;
+import lombok.Getter;
 
 public class WorkspaceXMLEditor extends DefaultCompoundView {
+    /**
+     * Editor properties
+     */
+    public static final String CK_FONT_FACE = "font.face",
+        CK_FONT_SIZE = "font.size",
+        CK_FONT_STYLE = "font.style";
+    /**
+     * Configuration
+     */
+    private final ConfigFile config;
 
+    private final StyledJavaXmlEditor editor = new StyledJavaXmlEditor();
 
-    @SuppressWarnings("checkstyle:MagicNumber")
-    static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            javax.swing.JFrame frame = new javax.swing.JFrame("XML Editor");
-            frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-            frame.setSize(800, 600);
+    @Getter
+    private final WorkspacePluginContext pluginContext;
 
-            StyledJavaXmlEditor editor = new StyledJavaXmlEditor();
-            frame.add(editor);
+    public WorkspaceXMLEditor(WorkspacePluginContext pluginContext) {
+        super();
+        this.pluginContext = pluginContext;
+        this.config = new ConfigFile(
+            this.pluginContext.getUserDir().resolve("xed.cfg").toFile()
+        );
+    }
 
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
+    public void actionPerformed(ActionEvent e) {
+        Map<String, Object> lparam = new HashMap<>();
+        lparam.put("view", editor);
+        lparam.put("display", Boolean.TRUE);
+        lparam.put("register", Boolean.TRUE);
+        ServiceLocator.getInstance()
+            .getEventsDispatcher().fireEvent(IView.DISPLAY_IN_DESKTOP_EVENT, lparam, null);
+    }
+
+    @SuppressWarnings("checkstyle:MultipleStringLiterals")
+    public CButton[] getButtons() {
+
+        Image normal = new ResourceLoader(WorkspaceXMLEditor.class)
+            .getResourceAsImage("images/editor.png");
+        Image hover = new ResourceLoader(WorkspaceXMLEditor.class)
+            .getResourceAsImage("images/editor.png");
+
+        CButton bEditor = CButton.create(
+            this,
+            new ImageIcon(normal),
+            new ImageIcon(hover),
+            SHOW,
+            "Clematis XML WYSIWYG Editor"
+        );
+
+        return new CButton[] {bEditor};
     }
 
     @Override
     public void load() throws IOException {
-
+        try {
+            this.config.load();
+            this.editor.updateFont(
+                new Font(
+                    this.config.getString(CK_FONT_FACE),
+                    this.config.getInt(CK_FONT_STYLE),
+                    this.config.getInt(CK_FONT_SIZE)
+                )
+            );
+        } catch (IOException e) {
+            // ignore to defaults
+        }
+        this.editor.setWorkingDirectory(
+            this.pluginContext.getUserDir().toFile()
+        );
     }
 
     @Override
     public void save() throws IOException {
-
+        Font font = this.editor.getTextPane().getFont();
+        this.config.put(CK_FONT_FACE, font.getFamily());
+        this.config.putInt(CK_FONT_SIZE, font.getSize());
+        this.config.putInt(CK_FONT_STYLE, font.getStyle());
+        try {
+            this.config.store();
+        } catch (IOException e) {
+            // ignore
+        }
     }
 
     @Override
     public void reset() {
 
+    }
+
+    public static ResourceManager getResourceManager() {
+        return ResourceManagerHolder.RESOURCE_MANAGER;
+    }
+
+    private static final class ResourceManagerHolder {
+        private static final ResourceManager RESOURCE_MANAGER = new ResourceManager(WorkspaceXMLEditor.class);
     }
 }

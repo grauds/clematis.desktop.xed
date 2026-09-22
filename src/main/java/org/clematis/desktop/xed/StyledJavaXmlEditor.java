@@ -28,6 +28,7 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +53,8 @@ import javax.swing.tree.TreePath;
 
 import com.hyperrealm.kiwi.ui.KPanel;
 
+import lombok.Getter;
+
 /**
  * A specialized editor component that accommodates the editing and visualization
  * of Java and XML content with styled features. It serves as a Swing-based editor interface
@@ -71,10 +74,14 @@ public class StyledJavaXmlEditor extends KPanel {
     private final Map<XmlNode, DefaultMutableTreeNode> nodeToUiMap = new HashMap<>();
     private int nextTargetCaretPos = 0;
 
+    @Getter
+    private File workingDirectory;
+
     @SuppressWarnings("checkstyle:MagicNumber")
     public StyledJavaXmlEditor() {
         JSplitPane verticalSplit = getJSplitPane();
 
+        setLayout(new BorderLayout());
         add(verticalSplit, BorderLayout.CENTER);
         add(createToolbar(), BorderLayout.NORTH);
 
@@ -354,6 +361,11 @@ public class StyledJavaXmlEditor extends KPanel {
         return textPane;
     }
 
+    public void updateFont(Font newFont) {
+        getTextPane().setFont(newFont);
+        revalidate(); repaint();
+    }
+
     @SuppressWarnings("checkstyle:MultipleStringLiterals")
     public JTree getVisualTree() {
         if (visualTree == null) {
@@ -400,5 +412,9 @@ public class StyledJavaXmlEditor extends KPanel {
             engine.rebuildXmlTreeFromSpans();
         }
         return engine;
+    }
+
+    public void setWorkingDirectory(File workingDirectory) {
+        this.workingDirectory = workingDirectory;
     }
 }

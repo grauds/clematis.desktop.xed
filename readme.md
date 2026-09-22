@@ -1,6 +1,8 @@
-# XML WYSIWIG Editor
+# Visual XML Editor Plugin for Clematis Java Workspace
 
+A simple visual XML editor for producing rich text with bold, italic, and underline formatting, backed up by an XML document tree structure. The editor rebuilds the XML document tree in real time following text modifications. Also, the editor is able to work with any custom node.
 
+<img src="./docs/screenshot.png" alt="workspace_component_life_cycle.png" width="700"/>
 
 ## Key Features
 
