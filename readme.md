@@ -1,5 +1,6 @@
 # Visual XML Editor Plugin for Clematis Java Workspace
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/license/mit-0)
 [![Gradle Package](https://github.com/grauds/clematis.desktop.xed/actions/workflows/gradle-publish.yml/badge.svg)](https://github.com/grauds/clematis.desktop.xed/actions/workflows/gradle-publish.yml)
 
 A simple visual XML editor for producing rich text with bold, italic, and underline formatting, backed up by an XML document tree structure. The editor rebuilds the XML document tree in real time following text modifications. Also, the editor is able to work with any custom node.
